@@ -4,14 +4,16 @@
   "description": "test ",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "child_process": "^1.0.2",
     "express": "^4.16.4",
+    "helmet": "^3.16.0",
     "multer": "^1.4.1",
+    "uikit": "^3.0.3",
     "uniqid": "^5.0.3"
   }
 }

@@ -1,16 +1,7 @@
-
-// async function(){
-//     let response = await fetch('/fimlList')
-//     let responseJson = await response.json()
-//     let fromServer = responseJson.myString
-//     alert(fromServer)
-// }
-
 async function sendData (data, word){
     var fd = new FormData();
     fd.append('upl', data, word);
-    let response = await fetch('/api/test',
-    {
+    let response = await fetch('/api/test', {
         method: 'post',
         body: fd,
         headers: {
@@ -19,8 +10,24 @@ async function sendData (data, word){
     });
 
     let responseJson = await response.json();
-    let fromServer = responseJson;
-    alert(fromServer.outputMessage+"\nYou guessed: "+fromServer.userWord+"\nGoogle Understood: "+fromServer.understoodWord);
+    alert(responseJson.outputMessage+"\nYou guessed: "+responseJson.userWord+"\nGoogle Understood: "+responseJson.understoodWord);
+}
+
+function handleClick(elem, word){
+    var wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'violet',
+        progressColor: 'purple'
+    });
+
+    wavesurfer.load('/crowd-cheering.mp3');
+    wavesurfer.toggleMute();
+
+    wavesurfer.on('ready', function () {
+        wavesurfer.play();
+    });
+
+    console.log(word);
 }
 
 function wordClicked(word){
