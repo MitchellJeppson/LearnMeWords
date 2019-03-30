@@ -16,20 +16,20 @@ async function signUpClick(){
     const passwordRegex = /^[A-Za-z]\w{6,12}$/;
     if(password !== password2){
         $('#passwordsDontMatchMessage').show('fast');
-	$('#passwordFormatMessage').hide('fast');
-	$('#invalidMessage').hide('fast');
+        $('#passwordFormatMessage').hide('fast');
+        $('#invalidMessage').hide('fast');
         return;
     }
     else if(!password.match(passwordRegex)){
-	$('#passwordFormatMessage').show('fast');
-	$('#passwordsDontMatchMessage').hide('fast');
-	$('#invalidMessage').hide('fast');
-	return;
-    } 
+        $('#passwordFormatMessage').show('fast');
+        $('#passwordsDontMatchMessage').hide('fast');
+        $('#invalidMessage').hide('fast');
+        return;
+    }
 
 
     if(checkUsername(username)){
-        let response = await fetch("/createUser", {
+        let response = await fetch("/db/createUser", {
             method: "POST",
             body: JSON.stringify({fName: fName, lName: lName, username: username, password: password}),
             headers: {
