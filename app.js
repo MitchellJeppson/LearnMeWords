@@ -15,9 +15,8 @@ app.all('*', (req, res, next) => {
     if(req.secure){
         return next();
     };
-    // res.redirect('https://' + req.host + req.url); // express 3.x
     res.redirect('https://' + req.hostname + req.url); // express 4.x
-}); // at top of routing calls
+});
 
 app.use(helmet()); // Add Helmet as a middleware
 
