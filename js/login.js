@@ -2,7 +2,7 @@ async function signInClick(){
     const u = $('#username')[0].value;
     const p = $('#password')[0].value;
 
-    let response = await fetch("/signIn", {
+    let response = await fetch("/db/signIn", {
         method: 'POST',
         body:  JSON.stringify({username: u, password: p}),
         headers: {
