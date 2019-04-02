@@ -12,15 +12,18 @@ const githubHook = require('./routes/githubHook');
 const mongoDatabase = require('./routes/database');
 const processAudio = require('./routes/processAudio');
 
-app.all('*', (req, res, next) => {
-    if(req.secure){
-        return next();
-    };
-    res.redirect('https://' + req.hostname + req.url); // express 4.x
-});
+const isProd = require("os").userInfo().username === "bitnami";
 
-app.use(helmet()); // Add Helmet as a middleware
+if(isProd){
+    app.all('*', (req, res, next) => {
+        if(req.secure){
+            return next();
+        };
+        res.redirect('https://' + req.hostname + req.url);
+    });
 
+    app.use(helmet());
+}
 app.use(bodyParser.json());
 
 app.use('/githubHook', githubHook);
@@ -47,4 +50,6 @@ const options = {
 };
 
 app.listen(port, ()=> console.log(`LearnMeWords app listening on port ${port}!`));
-https.createServer(options, app).listen(3123, () => console.log(`LearnMeWords secure app listening on port 3123!`));
+if(isProd){
+    https.createServer(options, app).listen(3123, () => console.log(`LearnMeWords secure app listening on port 3123!`));
+}
