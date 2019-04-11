@@ -1,40 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('../auth/passport');
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb://mjeppson:mitchelljeppson@learnmewords-users-shard-00-00-qfbii.mongodb.net:27017,learnmewords-users-shard-00-01-qfbii.mongodb.net:27017,learnmewords-users-shard-00-02-qfbii.mongodb.net:27017/test?ssl=true&replicaSet=LearnMeWords-Users-shard-0&authSource=admin&retryWrites=true";
+const uri = "mongodb+srv://mjeppson:mjeppson@learnmewords-users-qfbii.mongodb.net/test?retryWrites=true";
+const client = new MongoClient(uri, { useNewUrlParser: true});
+const conn = client.connect();
+const ObjectID = require('mongodb').ObjectID;
 
 
-router.post('/createUser', (req, res) => {
-    MongoClient.connect(uri, async function(err, client) {
-        const collection = client.db("LearnMeWordsDB").collection("user_info");
-        await collection.insertOne(req.body, (err, response) => {
-            if (err) throw err;
-            res.json({result: "good"});
-            res.end('end');
-        });
-        client.close();
+router.post('/createUser', async (req, res) => {
+    const collection = client.db("LearnMeWordsDB").collection("user_info");
+    const query = { username: req.body.username };
+    await collection.find(query).toArray(async (err, result) => {
+        if(result.length > 0){
+            req.session.message = "Username already taken.";
+            res.redirect('/signUp');
+        }
+        else{
+            await collection.insertOne(req.body, (err, response) => {
+                if (err) throw err;
+                req.session.username = req.body.username;
+                res.redirect('/');
+            });
+        }
     });
 });
 
-router.post('/signIn', (req, res) => {
-    MongoClient.connect(uri, async function(err, client) {
-        const collection = client.db("LearnMeWordsDB").collection("user_info");
-        var query = { username: req.body.username, password: req.body.password };
-
-        await collection.find(query).toArray(function(err, result) {
-            if (err) throw err;
-            let found = "";
-            if(result.length >  0){
-                found = {result: "good"};
-            }
-            else{
-                found = {result: "bad"};
-            }
-            res.json(found)
-            res.end('end');
+router.post('/signIn', (req, res, next)=>{
+    req.session.message = "";
+    passport.authenticate('local', (err, user, info)=>{
+        if (err) return next(err);
+        if (!user) {
+            req.session.message = "Incorrect username or password";
+            return res.redirect('/');
+        }
+        req.logIn(user, function(err){
+            if (err) return next(err);
+            return res.redirect('/home');
         });
-        client.close();
-    });
+    })(req, res, next);
 });
 
 module.exports = router;

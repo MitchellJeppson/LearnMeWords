@@ -1,14 +1,11 @@
-async function signInClick(){
+
+function signInClick(){
     window.location.replace('/');
 }
 
-function checkUsername(username){
-    return true;
-}
-
-async function signUpClick(){
-    const fName = $('#fName')[0].value;
-    const lName = $('#lName')[0].value;
+function signUpClick(){
+    const firstName = $('#fName')[0].value;
+    const lastName = $('#lName')[0].value;
     const username = $('#username')[0].value;
     const password = $('#password')[0].value;
     const password2 = $('#password2')[0].value;
@@ -27,27 +24,7 @@ async function signUpClick(){
         return;
     }
 
-
-    if(checkUsername(username)){
-        let response = await fetch("/db/createUser", {
-            method: "POST",
-            body: JSON.stringify({fName: fName, lName: lName, username: username, password: password}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        let responseJson = await response.json();
-        if(responseJson.result == "good"){
-            window.location.replace("/home");
-        }
-        else{
-            $('#invalidMessage').show('fast');
-        }
-    }
-    else{
-
-    }
+    sendPostRequest("/db/createUser", {firstName: firstName, lastName: lastName, username: username, password: password, password2: password2});
 }
 
 $(document).ready(function(){

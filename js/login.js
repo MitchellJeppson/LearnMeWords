@@ -1,30 +1,16 @@
-async function signInClick(){
-    const u = $('#username')[0].value;
-    const p = $('#password')[0].value;
 
-    let response = await fetch("/db/signIn", {
-        method: 'POST',
-        body:  JSON.stringify({username: u, password: p}),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
+function signInClick(){
 
-    let responseJson = await response.json();
-    if(responseJson.result == "good"){
-        console.log("inside good");
-        window.location.replace('/home');
-    }
-    else{
-        $("#invalidMessage").show('fast');
-    }
+    const username = $('#username')[0].value;
+    const password = $('#password')[0].value;
+
+    sendPostRequest("/db/signIn", {username: username, password: password});
 }
 
 function signUpClick(){
-    window.location.replace('/signUp')
+    window.location.href = "/signUp";
 }
 
-//Fade in dashboard box
 $(document).ready(function(){
     $('.box').hide().fadeIn(1000);
 });
