@@ -53,6 +53,10 @@ app.get('/signUp', (req, res) => {
     res.render('signUp.ejs', {message: req.session.message});
 });
 
+app.get('/highscores', /*ensureAuthenticated,*/ (req, res) => {
+    res.render('highscores.ejs');
+});
+
 app.use(express.static(path.join(__dirname, './')));
 
 
